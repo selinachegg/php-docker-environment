@@ -1,0 +1,131 @@
+# ============================================================
+#  ENVIRONNEMENT PHP DOCKER — Cours PHP débutants
+#  Equivalent XAMPP : Apache + PHP 7.4 + MariaDB + phpMyAdmin
+# ============================================================
+#
+#  Accès :
+#    Site PHP    → http://localhost:8080
+#    phpMyAdmin  → http://localhost:8081
+#    Portainer   → http://localhost:9000  (HTTP)  ← recommandé
+#                  https://localhost:9443 (HTTPS) ← alternative
+#    Dashboard   → http://localhost:8082  (tableau de bord accueil)
+#
+# ============================================================
+
+services:
+
+  # ──────────────────────────────────────────────────────────
+  # SERVICE WEB — Apache + PHP 7.4
+  # Equivalent du "htdocs" de XAMPP
+  # ──────────────────────────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cours_web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./htdocs:/var/www/html          # ← vos fichiers PHP ici
+      - ./config/php.ini:/usr/local/lib/php.ini:ro
+    depends_on:
+      - db
+    networks:
+      - cours-network
+    environment:
+      DB_HOST: db
+      DB_NAME: app
+      DB_USER: app
+      DB_PASSWORD: app
+
+  # ──────────────────────────────────────────────────────────
+  # SERVICE BASE DE DONNÉES — MariaDB (compatible MySQL)
+  # ──────────────────────────────────────────────────────────
+  db:
+    image: mariadb:10.6
+    container_name: cours_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    volumes:
+      - mysql_data:/var/lib/mysql       # ← données persistantes
+    networks:
+      - cours-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────────────────
+  # SERVICE phpMyAdmin — Interface web pour la base de données
+  # ──────────────────────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: cours_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      - db
+    networks:
+      - cours-network
+
+  # ──────────────────────────────────────────────────────────
+  # SERVICE PORTAINER — Interface graphique de gestion Docker
+  # Démarrer / Arrêter / Redémarrer les conteneurs visuellement
+  # ──────────────────────────────────────────────────────────
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: cours_portainer
+    restart: unless-stopped
+    # --http-enabled : force l'accès HTTP sur le port 9000
+    # (nécessaire sur Portainer CE 2.x où HTTPS seul est actif par défaut)
+    command: --http-enabled
+    ports:
+      - "9000:9000"   # HTTP  → http://localhost:9000
+      - "9443:9443"   # HTTPS → https://localhost:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - cours-network
+
+  # ──────────────────────────────────────────────────────────
+  # SERVICE DASHBOARD — Page d'accueil avec tous les liens
+  # ──────────────────────────────────────────────────────────
+  dashboard:
+    image: nginx:alpine
+    container_name: cours_dashboard
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - ./dashboard:/usr/share/nginx/html:ro
+    networks:
+      - cours-network
+
+# ──────────────────────────────────────────────────────────
+# VOLUMES — Persistance des données
+# ──────────────────────────────────────────────────────────
+volumes:
+  mysql_data:
+    name: cours_mysql_data
+  portainer_data:
+    name: cours_portainer_data
+
+# ──────────────────────────────────────────────────────────
+# RÉSEAU — Communication interne entre services
+# ──────────────────────────────────────────────────────────
+networks:
+  cours-network:
+    driver: bridge

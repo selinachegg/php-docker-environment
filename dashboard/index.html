@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — PHP Docker Course</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #0f172a;
+            --surface:  #1e293b;
+            --border:   #334155;
+            --primary:  #6366f1;
+            --cyan:     #06b6d4;
+            --green:    #34d399;
+            --text:     #e2e8f0;
+            --muted:    #94a3b8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 60%);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 2rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99,102,241,0.2);
+            border: 1px solid rgba(99,102,241,0.4);
+            border-radius: 20px;
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            color: #a5b4fc;
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+            line-height: 1.1;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ── Status bar ── */
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ── Main content ── */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+            margin-top: 2.5rem;
+        }
+
+        .section-title:first-child { margin-top: 0; }
+
+        /* ── Service Cards ── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .service-card.blue::before   { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .service-card.orange::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .service-card.teal::before   { background: linear-gradient(90deg, #06b6d4, #67e8f9); }
+        .service-card.pink::before   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+
+        .service-card:hover {
+            border-color: rgba(99,102,241,0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        .service-card:hover::before { opacity: 1; }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .tag-primary   { background: rgba(99,102,241,0.2);  color: #a5b4fc; }
+        .tag-orange    { background: rgba(245,158,11,0.2);  color: #fbbf24; }
+        .tag-cyan      { background: rgba(6,182,212,0.2);   color: #67e8f9; }
+        .tag-pink      { background: rgba(236,72,153,0.2);  color: #f472b6; }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-desc {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .card-url {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        .arrow {
+            margin-left: auto;
+            color: var(--border);
+            font-size: 1.1rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .service-card:hover .arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        /* ── Credentials ── */
+        .creds-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+
+        .creds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cred-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .cred-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .cred-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        /* ── Quick steps ── */
+        .steps-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+
+        .steps-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .step-text {
+            line-height: 1.5;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .step-text code {
+            background: rgba(6,182,212,0.15);
+            color: var(--cyan);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            color: #475569;
+            font-size: 0.85rem;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+    <div class="header-badge">
+        <span>🐳</span> Docker Environment — PHP Course
+    </div>
+    <h1>Dashboard</h1>
+    <p>All your development tools accessible in one click</p>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-dot"></div>
+            Apache + PHP 7.4
+        </div>
+        <div class="status-item">
+            <div class="status-dot"></div>
+            MariaDB 10.6
+        </div>
+        <div class="status-item">
+            <div class="status-dot"></div>
+            phpMyAdmin
+        </div>
+        <div class="status-item">
+            <div class="status-dot"></div>
+            Portainer
+        </div>
+    </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- Services -->
+    <div class="section-title">Your services</div>
+    <div class="services-grid">
+
+        <!-- PHP Site -->
+        <a class="service-card blue" href="http://localhost:8080" target="_blank">
+            <div class="card-header">
+                <div class="card-icon">🌐</div>
+                <span class="card-tag tag-primary">PHP 7.4</span>
+            </div>
+            <div>
+                <div class="card-title">My PHP Site</div>
+                <div class="card-desc">
+                    Your PHP files from the <strong>htdocs/</strong> folder are served here.
+                    This is your main workspace.
+                </div>
+            </div>
+            <div class="card-url">
+                🔗 localhost:8080
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- phpMyAdmin -->
+        <a class="service-card orange" href="http://localhost:8081" target="_blank">
+            <div class="card-header">
+                <div class="card-icon">🗄️</div>
+                <span class="card-tag tag-orange">Database</span>
+            </div>
+            <div>
+                <div class="card-title">phpMyAdmin</div>
+                <div class="card-desc">
+                    Visual interface to manage your MySQL database:
+                    create tables, insert data, run SQL queries.
+                </div>
+            </div>
+            <div class="card-url">
+                🔗 localhost:8081
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- Portainer -->
+        <a class="service-card teal" href="http://localhost:9000" target="_blank">
+            <div class="card-header">
+                <div class="card-icon">🐳</div>
+                <span class="card-tag tag-cyan">Docker GUI</span>
+            </div>
+            <div>
+                <div class="card-title">Portainer</div>
+                <div class="card-desc">
+                    Visual interface to manage your Docker containers:
+                    start, stop, restart, view logs without the command line.
+                    <br><br>
+                    <strong style="color:#f87171">⚠️ First launch</strong>: create your account within 5 minutes of starting.
+                    If you see <em>/timeout.html</em>, use <code style="background:rgba(255,255,255,0.1);padding:1px 4px;border-radius:3px">reset-portainer.bat</code> (Windows) or restart the container.
+                </div>
+            </div>
+            <div class="card-url" style="flex-direction:column; gap:4px; align-items:flex-start">
+                <div style="display:flex;align-items:center;gap:6px;width:100%">🔗 HTTP → localhost:9000 <span class="arrow" style="margin-left:auto">→</span></div>
+                <div style="font-size:0.8rem; color:#94a3b8">HTTPS → localhost:9443</div>
+            </div>
+        </a>
+
+        <!-- Dashboard (this page) -->
+        <a class="service-card pink" href="http://localhost:8082" target="_blank">
+            <div class="card-header">
+                <div class="card-icon">🏠</div>
+                <span class="card-tag tag-pink">This page</span>
+            </div>
+            <div>
+                <div class="card-title">Dashboard</div>
+                <div class="card-desc">
+                    You are here! This home page centralizes all links
+                    to your development tools.
+                </div>
+            </div>
+            <div class="card-url">
+                🔗 localhost:8082
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Credentials -->
+    <div class="section-title" style="margin-top:3rem">Database credentials</div>
+    <div class="creds-card">
+        <div class="creds-grid">
+            <div class="cred-item">
+                <div class="cred-label">Host (in PHP)</div>
+                <div class="cred-value">db</div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-label">Database</div>
+                <div class="cred-value">app</div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-label">Username</div>
+                <div class="cred-value">app</div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-label">Password</div>
+                <div class="cred-value">app</div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-label">Root password</div>
+                <div class="cred-value">root</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick steps -->
+    <div class="section-title" style="margin-top:3rem">How to add a PHP file?</div>
+    <div class="steps-card">
+        <ul class="steps-list">
+            <li class="step">
+                <div class="step-num">1</div>
+                <div class="step-text">
+                    Open the <code>htdocs/</code> folder in your file explorer
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-num">2</div>
+                <div class="step-text">
+                    Create a new file, for example <code>myscript.php</code>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-num">3</div>
+                <div class="step-text">
+                    Write your PHP code and save the file
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-num">4</div>
+                <div class="step-text">
+                    Open your browser and go to <code>http://localhost:8080/myscript.php</code>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-num">5</div>
+                <div class="step-text">
+                    That's it! No need to restart anything 🎉
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</main>
+
+<footer>
+    <p>PHP Course Environment — Apache + PHP 7.4 + MariaDB 10.6 + phpMyAdmin + Portainer</p>
+</footer>
+
+</body>
+</html>
