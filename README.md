@@ -116,6 +116,10 @@ $pdo = new PDO(
 
 Open the [**Interactive tutorial (HTML)**](tutorials/STUDENT-TUTORIAL.html) in your browser for the complete step-by-step guide (Mac and Windows).
 
+PDF versions are also available in the **`tutorials/`** folder:
+- [Tutorial Mac (PDF)](tutorials/Tutorial%20%E2%80%94%20PHP%20Docker%20Environment%20Mac.pdf)
+- [Tutorial Windows (PDF)](tutorials/Tutorial%20%E2%80%94%20PHP%20Docker%20Environment%20Windows.pdf)
+
 ---
 
 ## Quick troubleshooting
