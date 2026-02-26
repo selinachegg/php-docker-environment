@@ -114,7 +114,7 @@ $pdo = new PDO(
 
 ## Full tutorial
 
-Open **`STUDENT-TUTORIAL.html`** in your browser for the complete step-by-step guide (Mac and Windows).
+Open the [**Interactive tutorial (HTML)**](tutorials/STUDENT-TUTORIAL.html) in your browser for the complete step-by-step guide (Mac and Windows).
 
 ---
 

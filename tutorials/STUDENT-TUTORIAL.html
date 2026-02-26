@@ -233,8 +233,8 @@ body {
 .cover {
   width: 210mm;
   min-height: 297mm;
-  margin: 0 auto 1rem;              /* same centering as .page */
-  box-shadow: 0 2px 16px rgba(0,0,0,0.1); /* same shadow as .page */
+  margin: 0 auto 1rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -428,6 +428,35 @@ pre {
   background: #0f172a; border-radius: 10px;
   padding: 14px 16px; margin: 10px 0;
   page-break-inside: avoid;
+  position: relative;
+}
+pre .copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  color: rgba(255,255,255,0.5);
+  font-family: inherit;
+  font-size: 7.5pt;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+pre:hover .copy-btn { opacity: 1; }
+pre .copy-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+}
+pre .copy-btn.copied {
+  background: rgba(5,150,105,0.3);
+  border-color: rgba(5,150,105,0.5);
+  color: #6ee7b7;
+  opacity: 1;
 }
 pre code {
   background: none; border: none; padding: 0;
@@ -524,9 +553,10 @@ pre code {
 /* ══════════════════════════════════════════════════════════
    PRINT — PDF Export (Chrome / Edge → Save as PDF)
    Goal: no split blocks, clean page breaks,
-   identical rendering on Mac & Windows.
+   identical rendering Mac & Windows.
 ══════════════════════════════════════════════════════════ */
-@page { size: A4; margin: 18mm; }
+@page { size: A4; margin: 20mm; }
+@page cover-page { margin: 0; }
 
 @media print {
 
@@ -546,15 +576,14 @@ pre code {
   .selector-screen { display: none !important; }
   .nav-bar         { display: none !important; }
   .hidden          { display: none !important; }
+  .copy-btn        { display: none !important; }
 
   /* ── 3. Sticky / fixed elements → static ────────────── */
   .nav-bar {
     position: static !important;
   }
 
-  /* ── 4. Pages: natural flow (no fixed height) ─────── */
-  /*    @page margin handles margins → remove inner       */
-  /*    paddings that would cause double margins.          */
+  /* ── 4. Pages ────────────────────────────────────────── */
   .page {
     width: auto;
     min-height: auto;
@@ -570,34 +599,33 @@ pre code {
     padding: 0;
   }
 
-  /* ── 5. Cover ─────────────────────────────────────── */
+  /* ── 5. Cover — FULL PAGE via named page ──────── */
   .cover {
+    page: cover-page;
     width: auto;
-    min-height: 258mm;        /* ≈ A4 − 2×18 mm → fills the page */
+    min-height: 297mm;
     box-shadow: none;
     margin: 0;
-    padding: 12mm 8mm;        /* reduced because @page already adds 18 mm */
+    padding: 28mm 25mm;
   }
   .cover::before,
   .cover::after {
-    display: none;            /* decorative circles not needed in PDF */
+    display: none;
   }
 
-  /* ── 6. Chapter header ─────────────────────────────── */
-  /*    No more negative margins (page-content has no      */
-  /*    padding) → rounded banner instead.                 */
+  /* ── 6. Chapter header ─────────────────────────── */
   .ch-header {
     margin: 0 0 20px 0;
     border-radius: 10px;
   }
 
-  /* ── 7. Page breaks between chapters ───────────────── */
+  /* ── 7. Page breaks between chapters ───────────── */
   .page-break {
     break-after: page;
     page-break-after: always;
   }
 
-  /* ── 8. TEACHING BLOCKS — NEVER SPLIT ─────────────── */
+  /* ── 8. TEACHING BLOCKS — NEVER SPLIT ─────────── */
   .step,
   .steps,
   .alert,
@@ -620,7 +648,7 @@ pre code {
     page-break-inside: avoid;
   }
 
-  /* ── 9. Browser bar stuck to its content ──────────── */
+  /* ── 9. Browser bar stuck to its content ───────── */
   .bbar {
     break-after: avoid;
     page-break-after: avoid;
@@ -638,14 +666,13 @@ pre code {
     page-break-after: avoid;
   }
 
-  /* ── 12. Orphan / widow control ──────────────────── */
+  /* ── 12. Orphan / widow control ──────────────── */
   p, li {
     orphans: 3;
     widows: 3;
   }
 
-  /* ── 13. Flex / Grid → single column in print ──────── */
-  /*    Avoids breaks in 2-column layouts.                 */
+  /* ── 13. Flex / Grid → single column in print ── */
   .g2 {
     display: block !important;
   }
@@ -653,7 +680,6 @@ pre code {
     margin-bottom: 8px;
   }
 
-  /* Inline grids in browser simulations                   */
   .bcontent [style*="grid-template-columns"] {
     display: block !important;
   }
@@ -737,7 +763,7 @@ pre code {
       <tr><td>🏠 Dashboard</td><td>http://localhost:8082</td></tr>
     </table>
   </div>
-  <div class="cover-footer">Mac Tutorial — PHP Course Environment — Docker Desktop</div>
+  <div class="cover-footer">Mac Tutorial — PHP Course Docker Environment — Docker Desktop</div>
 </div>
 
 <!-- ── MAC TABLE OF CONTENTS ── -->
@@ -779,7 +805,7 @@ pre code {
       <div class="toc-row"><div class="toc-num">5</div><div class="toc-text">Manage the database with phpMyAdmin</div><div class="toc-pg">p. 8</div></div>
     </li>
     <li>
-      <div class="toc-row"><div class="toc-num">6</div><div class="toc-text">Stop and restart the services</div><div class="toc-pg">p. 9</div></div>
+      <div class="toc-row"><div class="toc-num">6</div><div class="toc-text">Stop and restart services</div><div class="toc-pg">p. 9</div></div>
     </li>
     <li>
       <div class="toc-row"><div class="toc-num">7</div><div class="toc-text">Mac Troubleshooting</div><div class="toc-pg">p. 10</div></div>
@@ -800,7 +826,7 @@ pre code {
 </div>
 </div>
 
-<!-- ── CH.1 MAC: DOCKER DESKTOP INSTALLATION ── -->
+<!-- ── CH.1 MAC: INSTALL DOCKER DESKTOP ── -->
 <div class="page page-break">
 <div class="page-content">
   <div class="ch-header">
@@ -809,7 +835,7 @@ pre code {
   </div>
 
   <h2>🍎 What type of Mac do you have?</h2>
-  <p>Before downloading, identify your processor. The two types of Mac require different versions of Docker.</p>
+  <p>Before downloading, identify your processor. The two Mac types require different versions of Docker.</p>
   <div class="alert a-info">
     <div class="aico">🔍</div>
     <div class="abody">
@@ -871,11 +897,11 @@ pre code {
 <div class="page-content">
   <div class="ch-header">
     <div class="ch-num">2</div>
-    <div><div class="ch-label">Chapter 2</div><div class="ch-title">First launch</div><div class="ch-sub">Start the environment by double-clicking</div></div>
+    <div><div class="ch-label">Chapter 2</div><div class="ch-title">First launch</div><div class="ch-sub">Launch the environment with a double-click</div></div>
   </div>
 
   <h2>🔑 One-time step — Grant permissions</h2>
-  <p>The scripts <code>start.command</code> and <code>stop.command</code> need execute permission. <strong>This step only needs to be done once.</strong></p>
+  <p>The scripts <code>start.command</code> and <code>stop.command</code> need execution permission. <strong>This step only needs to be done once.</strong></p>
   <ul class="steps">
     <li class="step">
       <div class="snum">1</div>
@@ -886,7 +912,7 @@ pre code {
       <div><div class="stitle">Navigate to the project folder</div><div class="sdesc">Type and press <strong>Enter</strong>:</div></div>
     </li>
   </ul>
-  <pre><code>cd ~/Desktop/phpenvENG</code></pre>
+  <pre><code>cd ~/Desktop/PHPenv</code></pre>
   <ul class="steps">
     <li class="step">
       <div class="snum">3</div>
@@ -901,15 +927,15 @@ pre code {
 
   <h2>🚀 Launch the environment</h2>
   <ul class="steps">
-    <li class="step"><div class="snum">1</div><div><div class="stitle">Make sure Docker Desktop is open and green</div><div class="sdesc">Look at the whale icon in the top right of the screen</div></div></li>
+    <li class="step"><div class="snum">1</div><div><div class="stitle">Verify that Docker Desktop is open and green</div><div class="sdesc">Check the whale icon at the top right of the screen</div></div></li>
     <li class="step"><div class="snum">2</div><div><div class="stitle">Double-click on <code>start.command</code></div><div class="sdesc">This file is in the project folder (on your Desktop)</div></div></li>
-    <li class="step"><div class="snum">3</div><div><div class="stitle">A Terminal window opens automatically</div><div class="sdesc">Do not close it! The services are starting in the background</div></div></li>
+    <li class="step"><div class="snum">3</div><div><div class="stitle">A Terminal window opens automatically</div><div class="sdesc">Do not close it! Services are starting in the background</div></div></li>
     <li class="step"><div class="snum">4</div><div><div class="stitle">Wait for the green confirmation message</div><div class="sdesc"><code>✅  Environment started successfully!</code></div></div></li>
     <li class="step"><div class="snum snum red">!</div><div><div class="stitle" style="color:#dc2626">Go to Portainer immediately!</div><div class="sdesc">Open http://localhost:9000 within the first 5 minutes to create your account. See Ch.3 for details.</div></div></li>
   </ul>
   <div class="alert a-warn">
     <div class="aico">⏱️</div>
-    <div class="abody"><div class="atitle">First time: wait 5 to 10 minutes</div><div class="atext">Docker downloads the images (PHP, MariaDB…). This is slow <strong>only the first time</strong>. Subsequent launches: less than 10 seconds.</div></div>
+    <div class="abody"><div class="atitle">First time: wait 5 to 10 minutes</div><div class="atext">Docker is downloading the images (PHP, MariaDB...). This is slow <strong>only the first time</strong>. Subsequent launches: less than 10 seconds.</div></div>
   </div>
 </div>
 </div>
@@ -928,7 +954,7 @@ pre code {
     <tbody>
       <tr><td class="svc">🏠 Dashboard</td><td class="url">localhost:8082</td><td class="desc">Home page with all links</td></tr>
       <tr><td class="svc">🌐 PHP Site</td><td class="url">localhost:8080</td><td class="desc">Your PHP files (htdocs/)</td></tr>
-      <tr><td class="svc">🗄️ phpMyAdmin</td><td class="url">localhost:8081</td><td class="desc">Visual database management</td></tr>
+      <tr><td class="svc">🗄️ phpMyAdmin</td><td class="url">localhost:8081</td><td class="desc">Visual management of the DB</td></tr>
       <tr><td class="svc">🐳 Portainer</td><td class="url">localhost:9000</td><td class="desc">Docker container management</td></tr>
     </tbody>
   </table>
@@ -937,7 +963,7 @@ pre code {
   <p>Your daily <strong>starting point</strong>. It centralizes all links and your credentials.</p>
   <div class="bbar"><div class="bdots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div><div class="burl">http://localhost:8082</div></div>
   <div class="bcontent">
-    <p style="margin:0 0 8px;font-weight:700;color:#1e293b">Dashboard — PHP Docker Course</p>
+    <p style="margin:0 0 8px;font-weight:700;color:#1e293b">Dashboard — PHP Course Docker</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:8.5pt">
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px;border-left:3px solid #4f46e5">🌐 <strong>PHP Site</strong><br><span style="color:#64748b">localhost:8080 →</span></div>
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px;border-left:3px solid #d97706">🗄️ <strong>phpMyAdmin</strong><br><span style="color:#64748b">localhost:8081 →</span></div>
@@ -968,11 +994,11 @@ pre code {
   </div>
   <div class="alert a-warn">
     <div class="aico">⏱️</div>
-    <div class="abody"><div class="atitle">phpMyAdmin not responding?</div><div class="atext">The database takes 10 to 20 seconds to start. Wait and refresh with <strong>Cmd+R</strong>.</div></div>
+    <div class="abody"><div class="atitle">phpMyAdmin not responding?</div><div class="atext">The DB takes 10 to 20 seconds to start. Wait and refresh with <strong>Cmd+R</strong>.</div></div>
   </div>
 
   <h2>🐳 Portainer — localhost:9000</h2>
-  <p>Graphical interface to manage your Docker containers (start, stop, restart, view logs) — without the command line.</p>
+  <p>Graphical interface to manage your Docker containers (start, stop, restart, view logs) — no command line needed.</p>
 
   <div class="alert a-red">
     <div class="aico">⚠️</div>
@@ -989,7 +1015,7 @@ pre code {
   <h3>Create your account (first access)</h3>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Open http://localhost:9000</div><div class="sdesc">Portainer asks you to create an administrator account</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Enter a username and password</div><div class="sdesc">Example: <code>admin</code> — Password: 12 characters minimum</div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">Enter a username and a password</div><div class="sdesc">Example: <code>admin</code> — Password: 12 characters minimum</div></div></li>
     <li class="step"><div class="snum">3</div><div><div class="stitle">Click "Create user"</div><div class="sdesc">Then choose <strong>"Get Started" → "local"</strong></div></div></li>
   </ul>
 
@@ -1016,10 +1042,10 @@ pre code {
   </div>
 
   <h2>📁 The htdocs folder — your workspace</h2>
-  <p>All your PHP files must be in the <code>htdocs/</code> folder of the project. It is the equivalent of XAMPP's <code>htdocs</code> folder.</p>
+  <p>All your PHP files must be in the <code>htdocs/</code> folder of the project. It is the equivalent of the <code>htdocs</code> folder in XAMPP.</p>
   <div class="card c-blue">
     <div class="ctitle">📂 Project structure</div>
-    <pre style="margin:4px 0"><code style="font-size:8.5pt;line-height:1.9">phpenvENG/
+    <pre style="margin:4px 0"><code style="font-size:8.5pt;line-height:1.9">PHPenv/
 ├── 📁 <span class="cv">htdocs/</span>          ← <span class="cs">YOUR PHP FILES HERE</span>
 │   ├── index.php       ← test page (already created)
 │   └── hello.php       ← your next file
@@ -1029,7 +1055,7 @@ pre code {
   <h2>✍️ Create your first PHP file</h2>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Open the <code>htdocs/</code> folder in Finder</div><div class="sdesc">Double-click on the folder from your Desktop</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Create a new file <code>hello.php</code></div><div class="sdesc">In VS Code, TextEdit, or any text editor. The <code>.php</code> extension is mandatory.</div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">Create a new file <code>hello.php</code></div><div class="sdesc">In VS Code, TextEdit, or any text editor. The <code>.php</code> extension is required.</div></div></li>
     <li class="step"><div class="snum">3</div><div><div class="stitle">Write your PHP code</div><div class="sdesc">Minimal example below</div></div></li>
     <li class="step"><div class="snum">4</div><div><div class="stitle">Save and open in the browser</div><div class="sdesc"><code>http://localhost:8080/hello.php</code> — refresh with <strong>Cmd+R</strong></div></div></li>
   </ul>
@@ -1040,7 +1066,7 @@ echo <span class="cs">"Hello world!"</span>;
 
   <div class="alert a-ok">
     <div class="aico">🎉</div>
-    <div class="abody"><div class="atitle">No restart needed!</div><div class="atext">Every change to your PHP files is visible immediately after <strong>Cmd+R</strong> in the browser.</div></div>
+    <div class="abody"><div class="atitle">No need to restart!</div><div class="atext">Every change to your PHP files is visible immediately after <strong>Cmd+R</strong> in the browser.</div></div>
   </div>
 
   <h2>🔌 Database connection (PDO)</h2>
@@ -1080,8 +1106,8 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>🛠️ Create a table</h2>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">In the left column, click on "app"</div><div class="sdesc">This is your database</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Tab "Structure" → "Create table"</div><div class="sdesc">Give it a name (e.g.: <code>users</code>) and choose the number of columns</div></div></li>
-    <li class="step"><div class="snum">3</div><div><div class="stitle">Define your columns, then click "Save"</div><div class="sdesc">Always add an <code>id</code> column as INT AUTO_INCREMENT primary key</div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">"Structure" tab → "Create table"</div><div class="sdesc">Give it a name (e.g.: <code>users</code>) and choose the number of columns</div></div></li>
+    <li class="step"><div class="snum">3</div><div><div class="stitle">Define your columns, then "Save"</div><div class="sdesc">Always add an <code>id</code> column as INT AUTO_INCREMENT as the primary key</div></div></li>
   </ul>
 
   <h2>📊 Example "users" table</h2>
@@ -1091,12 +1117,12 @@ echo <span class="cs">"Hello world!"</span>;
       <tr><td><code>id</code></td><td>INT</td><td>11</td><td style="color:#059669;font-size:9pt">PRIMARY KEY, AUTO_INCREMENT</td></tr>
       <tr><td><code>name</code></td><td>VARCHAR</td><td>100</td><td style="color:#64748b">—</td></tr>
       <tr><td><code>email</code></td><td>VARCHAR</td><td>150</td><td style="color:#64748b">—</td></tr>
-      <tr><td><code>created_at</code></td><td>DATETIME</td><td>—</td><td style="color:#64748b">DEFAULT CURRENT_TIMESTAMP</td></tr>
+      <tr><td><code>date_created</code></td><td>DATETIME</td><td>—</td><td style="color:#64748b">DEFAULT CURRENT_TIMESTAMP</td></tr>
     </tbody>
   </table>
 
-  <h2>🔍 Run an SQL query</h2>
-  <p>Tab <strong>"SQL"</strong> in phpMyAdmin:</p>
+  <h2>🔍 Execute an SQL query</h2>
+  <p><strong>"SQL"</strong> tab in phpMyAdmin:</p>
   <pre><code><span class="cc">-- Insert data</span>
 <span class="ck">INSERT INTO</span> users (name, email)
 <span class="ck">VALUES</span> (<span class="cs">'Alice Martin'</span>, <span class="cs">'alice@example.com'</span>);
@@ -1117,7 +1143,7 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>⏹️ Stop the environment</h2>
   <div class="g2">
     <div class="card c-blue"><div class="ctitle">Option A — The simplest</div><p style="font-size:9.5pt;color:#475569"><strong>Double-click</strong> on <code>stop.command</code> in the project folder. A window opens, everything stops cleanly.</p></div>
-    <div class="card c-cyan"><div class="ctitle">Option B — Via Portainer</div><ol style="font-size:9pt;color:#475569;line-height:1.9;padding-left:14px"><li>Open <code>localhost:9000</code></li><li>Tab <strong>"Containers"</strong></li><li>Check all containers</li><li>Click <strong>"Stop"</strong></li></ol></div>
+    <div class="card c-cyan"><div class="ctitle">Option B — Via Portainer</div><ol style="font-size:9pt;color:#475569;line-height:1.9;padding-left:14px"><li>Open <code>localhost:9000</code></li><li><strong>"Containers"</strong> tab</li><li>Check all containers</li><li>Click <strong>"Stop"</strong></li></ol></div>
   </div>
   <div class="alert a-ok">
     <div class="aico">💾</div>
@@ -1132,7 +1158,7 @@ echo <span class="cs">"Hello world!"</span>;
   </ul>
 
   <h2>📋 View the logs</h2>
-  <p>In Portainer → Containers → click on a container's <strong>name</strong> → "Logs". Useful for diagnosing errors.</p>
+  <p>In Portainer → Containers → click on the <strong>name</strong> of a container → "Logs". Useful for diagnosing errors.</p>
 
   <div class="alert a-tip">
     <div class="aico">💡</div>
@@ -1155,7 +1181,7 @@ echo <span class="cs">"Hello world!"</span>;
     <div class="ctitle" style="color:#dc2626">❌ Portainer — "timeout" page (/timeout.html)</div>
     <p style="font-size:9.5pt;color:#475569;margin:0 0 5px"><strong>Cause</strong>: admin account not created within the first 5 minutes.<br><strong>Solution:</strong> Restart Portainer (preserves all data):</p>
     <pre style="margin:4px 0"><code style="font-size:8.5pt">docker compose restart portainer</code></pre>
-    <p style="font-size:9pt;color:#475569;margin:4px 0 0">Then go <strong>immediately</strong> to http://localhost:9000 to create your account.<br><strong>Full reset</strong>: Docker Desktop → Volumes → delete <code>cours_portainer_data</code> → restart Portainer.</p>
+    <p style="font-size:9pt;color:#475569;margin:4px 0 0">Then go <strong>immediately</strong> to http://localhost:9000 to create your account.<br><strong>Full reset</strong>: Docker Desktop → Volumes → delete <code>cours_portainer_data</code> → relaunch Portainer.</p>
   </div>
 
   <div class="card c-red" style="margin-bottom:9px">
@@ -1164,19 +1190,19 @@ echo <span class="cs">"Hello world!"</span>;
   </div>
 
   <div class="card c-red" style="margin-bottom:9px">
-    <div class="ctitle" style="color:#dc2626">❌ localhost:8080 does not load</div>
-    <p style="font-size:9.5pt;color:#475569;margin:0">Wait 30 seconds (the database starts last) → <strong>Cmd+R</strong> to refresh.</p>
+    <div class="ctitle" style="color:#dc2626">❌ localhost:8080 is not loading</div>
+    <p style="font-size:9.5pt;color:#475569;margin:0">Wait 30 seconds (the DB starts last) → <strong>Cmd+R</strong> to refresh.</p>
   </div>
 
   <div class="card c-red" style="margin-bottom:9px">
     <div class="ctitle" style="color:#dc2626">❌ "Permission denied" on start.command</div>
     <p style="font-size:9pt;color:#475569;margin:4px 0">Open Terminal and type:</p>
-    <pre style="margin:4px 0"><code style="font-size:8.5pt">chmod +x ~/Desktop/phpenvENG/start.command stop.command</code></pre>
+    <pre style="margin:4px 0"><code style="font-size:8.5pt">chmod +x ~/Desktop/PHPenv/start.command stop.command</code></pre>
   </div>
 
   <div class="card c-red" style="margin-bottom:16px">
     <div class="ctitle" style="color:#dc2626">❌ phpMyAdmin — connection error</div>
-    <p style="font-size:9.5pt;color:#475569;margin:0">The database takes 10 to 20 seconds to start → wait and refresh (<strong>Cmd+R</strong>).</p>
+    <p style="font-size:9.5pt;color:#475569;margin:0">The DB takes 10 to 20 seconds to start → wait and refresh (<strong>Cmd+R</strong>).</p>
   </div>
 
   <div class="divider"></div>
@@ -1237,7 +1263,7 @@ echo <span class="cs">"Hello world!"</span>;
       <tr><td>🏠 Dashboard</td><td>http://localhost:8082</td></tr>
     </table>
   </div>
-  <div class="cover-footer">Windows Tutorial — PHP Course Environment — Docker Desktop + WSL2</div>
+  <div class="cover-footer">Windows Tutorial — PHP Course Docker Environment — Docker Desktop + WSL2</div>
 </div>
 
 <!-- ── WINDOWS TABLE OF CONTENTS ── -->
@@ -1250,7 +1276,7 @@ echo <span class="cs">"Hello world!"</span>;
       <ul class="toc-sub">
         <li><div class="toc-text">Enable WSL2 (Windows Subsystem for Linux)</div></li>
         <li><div class="toc-text">Install Docker Desktop for Windows</div></li>
-        <li><div class="toc-text">Verify the WSL2 + Docker configuration</div></li>
+        <li><div class="toc-text">Verify WSL2 + Docker configuration</div></li>
       </ul>
     </li>
     <li>
@@ -1270,7 +1296,7 @@ echo <span class="cs">"Hello world!"</span>;
     <li>
       <div class="toc-row"><div class="toc-num win">4</div><div class="toc-text">Working with PHP</div><div class="toc-pg">p. 7</div></div>
       <ul class="toc-sub">
-        <li><div class="toc-text">The htdocs folder in File Explorer</div></li>
+        <li><div class="toc-text">The htdocs folder in Windows Explorer</div></li>
         <li><div class="toc-text">Create and test a PHP file</div></li>
         <li><div class="toc-text">Connect to the database</div></li>
       </ul>
@@ -1279,7 +1305,7 @@ echo <span class="cs">"Hello world!"</span>;
       <div class="toc-row"><div class="toc-num win">5</div><div class="toc-text">Manage the database with phpMyAdmin</div><div class="toc-pg">p. 8</div></div>
     </li>
     <li>
-      <div class="toc-row"><div class="toc-num win">6</div><div class="toc-text">Stop and restart the services</div><div class="toc-pg">p. 9</div></div>
+      <div class="toc-row"><div class="toc-num win">6</div><div class="toc-text">Stop and restart services</div><div class="toc-pg">p. 9</div></div>
     </li>
     <li>
       <div class="toc-row"><div class="toc-num win">7</div><div class="toc-text">Windows Troubleshooting</div><div class="toc-pg">p. 10</div></div>
@@ -1300,7 +1326,7 @@ echo <span class="cs">"Hello world!"</span>;
 </div>
 </div>
 
-<!-- ── CH.1 WIN: WSL2 + DOCKER DESKTOP INSTALLATION ── -->
+<!-- ── CH.1 WIN: INSTALL WSL2 + DOCKER DESKTOP ── -->
 <div class="page page-break">
 <div class="page-content">
   <div class="ch-header win">
@@ -1311,13 +1337,13 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>① Enable WSL2 (Windows Subsystem for Linux)</h2>
   <p>WSL2 allows Docker to run efficiently on Windows. It is free and built into Windows 10/11.</p>
   <ul class="steps">
-    <li class="step"><div class="snum">1</div><div><div class="stitle">Open PowerShell as administrator</div><div class="sdesc"><strong>Start menu</strong> → search for "PowerShell" → <strong>right-click → "Run as administrator"</strong></div></div></li>
+    <li class="step"><div class="snum">1</div><div><div class="stitle">Open PowerShell as administrator</div><div class="sdesc"><strong>Start</strong> menu → search for "PowerShell" → <strong>right-click → "Run as administrator"</strong></div></div></li>
     <li class="step"><div class="snum">2</div><div><div class="stitle">Type the installation command</div><div class="sdesc">Copy-paste exactly:</div></div></li>
   </ul>
   <pre><code>wsl --install</code></pre>
   <ul class="steps">
     <li class="step"><div class="snum">3</div><div><div class="stitle">Restart your PC</div><div class="sdesc">Required after installing WSL2</div></div></li>
-    <li class="step"><div class="snum">4</div><div><div class="stitle">After restart: Ubuntu installs automatically</div><div class="sdesc">Create a Linux username and password when prompted (remember them!)</div></div></li>
+    <li class="step"><div class="snum">4</div><div><div class="stitle">After reboot: Ubuntu installs automatically</div><div class="sdesc">Create a Linux username and password when prompted (remember them!)</div></div></li>
   </ul>
   <div class="alert a-info">
     <div class="aico">ℹ️</div>
@@ -1332,14 +1358,14 @@ echo <span class="cs">"Hello world!"</span>;
     <li class="step"><div class="snum">4</div><div><div class="stitle">Open Docker Desktop → Settings → Resources → WSL Integration</div><div class="sdesc">Enable integration with <strong>Ubuntu</strong> → click "Apply &amp; Restart"</div></div></li>
   </ul>
 
-  <h2>✅ Docker Desktop is ready when…</h2>
+  <h2>✅ Docker Desktop is ready when...</h2>
   <div class="card c-green">
     <div class="ctitle">The whale icon 🐳 appears in the taskbar</div>
-    <p style="font-size:9.5pt;color:#475569;margin:0"><strong>Bottom-right</strong> corner of the Windows screen (notification area). It should be stable (not animated = ready).</p>
+    <p style="font-size:9.5pt;color:#475569;margin:0"><strong>Bottom-right</strong> corner of the Windows screen (notification area). It must be stable (not animated = ready).</p>
   </div>
   <div class="alert a-warn">
     <div class="aico">⚠️</div>
-    <div class="abody"><div class="atitle">Docker Desktop must remain open</div><div class="atext">Docker Desktop must remain running (even in the background) during your entire work session.</div></div>
+    <div class="abody"><div class="atitle">Docker Desktop must stay open</div><div class="atext">Docker Desktop must remain running (even in the background) during your entire work session.</div></div>
   </div>
 </div>
 </div>
@@ -1349,7 +1375,7 @@ echo <span class="cs">"Hello world!"</span>;
 <div class="page-content">
   <div class="ch-header win">
     <div class="ch-num">2</div>
-    <div><div class="ch-label">Chapter 2</div><div class="ch-title">First launch</div><div class="ch-sub">Start the environment with start.bat (double-click)</div></div>
+    <div><div class="ch-label">Chapter 2</div><div class="ch-title">First launch</div><div class="ch-sub">Launch the environment with start.bat (double-click)</div></div>
   </div>
 
   <h2>🚀 Launch the environment</h2>
@@ -1363,7 +1389,7 @@ echo <span class="cs">"Hello world!"</span>;
 
   <div class="alert a-warn">
     <div class="aico">⏱️</div>
-    <div class="abody"><div class="atitle">First time: wait 5 to 10 minutes</div><div class="atext">Docker downloads all the images (PHP, MariaDB…). This is slow <strong>only the first time</strong>. Subsequent launches: less than 10 seconds.</div></div>
+    <div class="abody"><div class="atitle">First time: wait 5 to 10 minutes</div><div class="atext">Docker is downloading all the images (PHP, MariaDB...). This is slow <strong>only the first time</strong>. Subsequent launches: less than 10 seconds.</div></div>
   </div>
 
   <h2>⚠️ If start.bat closes immediately</h2>
@@ -1380,9 +1406,9 @@ echo <span class="cs">"Hello world!"</span>;
 
   <h2>📁 Where is the project folder?</h2>
   <div class="card c-green">
-    <div class="ctitle">Access from File Explorer</div>
+    <div class="ctitle">Access from Windows Explorer</div>
     <p style="font-size:9.5pt;color:#475569;margin:4px 0">If the project is on your Desktop:</p>
-    <pre style="margin:6px 0"><code style="font-size:8.5pt">C:\Users\YourName\Desktop\phpenvENG\</code></pre>
+    <pre style="margin:6px 0"><code style="font-size:8.5pt">C:\Users\YourName\Desktop\PHPenv\</code></pre>
     <p style="font-size:9pt;color:#64748b;margin:0">Your PHP files go in the <code>htdocs\</code> subfolder</p>
   </div>
 </div>
@@ -1402,7 +1428,7 @@ echo <span class="cs">"Hello world!"</span>;
     <tbody>
       <tr><td class="svc">🏠 Dashboard</td><td class="url">localhost:8082</td><td class="desc">Home page with all links</td></tr>
       <tr><td class="svc">🌐 PHP Site</td><td class="url">localhost:8080</td><td class="desc">Your PHP files (htdocs/)</td></tr>
-      <tr><td class="svc">🗄️ phpMyAdmin</td><td class="url">localhost:8081</td><td class="desc">Visual database management</td></tr>
+      <tr><td class="svc">🗄️ phpMyAdmin</td><td class="url">localhost:8081</td><td class="desc">Visual management of the DB</td></tr>
       <tr><td class="svc">🐳 Portainer</td><td class="url">localhost:9000</td><td class="desc">Docker container management</td></tr>
     </tbody>
   </table>
@@ -1411,7 +1437,7 @@ echo <span class="cs">"Hello world!"</span>;
   <p>Your daily <strong>starting point</strong>. It centralizes all links and your credentials.</p>
   <div class="bbar"><div class="bdots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div><div class="burl">http://localhost:8082</div></div>
   <div class="bcontent">
-    <p style="margin:0 0 8px;font-weight:700;color:#1e293b">Dashboard — PHP Docker Course</p>
+    <p style="margin:0 0 8px;font-weight:700;color:#1e293b">Dashboard — PHP Course Docker</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:8.5pt">
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px;border-left:3px solid #4f46e5">🌐 <strong>PHP Site</strong><br><span style="color:#64748b">localhost:8080 →</span></div>
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px;border-left:3px solid #d97706">🗄️ <strong>phpMyAdmin</strong><br><span style="color:#64748b">localhost:8081 →</span></div>
@@ -1442,7 +1468,7 @@ echo <span class="cs">"Hello world!"</span>;
   </div>
   <div class="alert a-warn">
     <div class="aico">⏱️</div>
-    <div class="abody"><div class="atitle">phpMyAdmin not responding?</div><div class="atext">The database takes 10 to 20 seconds to start. Wait and refresh with <strong>Ctrl+R</strong> or <strong>F5</strong>.</div></div>
+    <div class="abody"><div class="atitle">phpMyAdmin not responding?</div><div class="atext">The DB takes 10 to 20 seconds to start. Wait and refresh with <strong>Ctrl+R</strong> or <strong>F5</strong>.</div></div>
   </div>
 
   <h2>🐳 Portainer — localhost:9000</h2>
@@ -1463,7 +1489,7 @@ echo <span class="cs">"Hello world!"</span>;
   <h3 class="win">Create your account (first access)</h3>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Open http://localhost:9000</div><div class="sdesc">Portainer asks you to create an administrator account</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Enter a username and password</div><div class="sdesc">Example: <code>admin</code> — Password: 12 characters minimum</div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">Enter a username and a password</div><div class="sdesc">Example: <code>admin</code> — Password: 12 characters minimum</div></div></li>
     <li class="step"><div class="snum">3</div><div><div class="stitle">Click "Create user"</div><div class="sdesc">Then choose <strong>"Get Started" → "local"</strong></div></div></li>
   </ul>
 
@@ -1490,10 +1516,10 @@ echo <span class="cs">"Hello world!"</span>;
   </div>
 
   <h2>📁 The htdocs folder — your workspace</h2>
-  <p>All your PHP files must be in the <code>htdocs\</code> folder of the project. It is directly accessible from <strong>File Explorer</strong>.</p>
+  <p>All your PHP files must be in the <code>htdocs\</code> folder of the project. It is directly accessible from <strong>Windows Explorer</strong>.</p>
   <div class="card c-blue">
     <div class="ctitle">📂 Where is htdocs?</div>
-    <pre style="margin:4px 0"><code style="font-size:8.5pt;line-height:1.9">C:\Users\YourName\Desktop\phpenvENG\
+    <pre style="margin:4px 0"><code style="font-size:8.5pt;line-height:1.9">C:\Users\YourName\Desktop\PHPenv\
 ├── 📁 <span class="cv">htdocs\</span>          ← <span class="cs">YOUR PHP FILES HERE</span>
 │   ├── index.php       ← test page (already created)
 │   └── hello.php       ← your next file
@@ -1502,8 +1528,8 @@ echo <span class="cs">"Hello world!"</span>;
 
   <h2>✍️ Create your first PHP file</h2>
   <ul class="steps">
-    <li class="step"><div class="snum">1</div><div><div class="stitle">Open the <code>htdocs\</code> folder in File Explorer</div><div class="sdesc">Double-click from your Desktop → <code>phpenvENG</code> folder → <code>htdocs</code></div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Create a new file <code>hello.php</code></div><div class="sdesc">In VS Code, Notepad++, or any editor. The <code>.php</code> extension is mandatory.</div></div></li>
+    <li class="step"><div class="snum">1</div><div><div class="stitle">Open the <code>htdocs\</code> folder in Windows Explorer</div><div class="sdesc">Double-click from your Desktop → <code>PHPenv</code> folder → <code>htdocs</code></div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">Create a new file <code>hello.php</code></div><div class="sdesc">In VS Code, Notepad++, or any editor. The <code>.php</code> extension is required.</div></div></li>
     <li class="step"><div class="snum">3</div><div><div class="stitle">Write your PHP code and save</div></div></li>
     <li class="step"><div class="snum">4</div><div><div class="stitle">Open in the browser</div><div class="sdesc"><code>http://localhost:8080/hello.php</code> — refresh with <strong>Ctrl+F5</strong></div></div></li>
   </ul>
@@ -1512,7 +1538,7 @@ echo <span class="cs">"Hello world!"</span>;
 <span class="ck">?&gt;</span></code></pre>
   <div class="alert a-ok">
     <div class="aico">🎉</div>
-    <div class="abody"><div class="atitle">No restart needed!</div><div class="atext">Every change to your PHP files is visible immediately after <strong>Ctrl+F5</strong> in the browser.</div></div>
+    <div class="abody"><div class="atitle">No need to restart!</div><div class="atext">Every change to your PHP files is visible immediately after <strong>Ctrl+F5</strong> in the browser.</div></div>
   </div>
 
   <h2>🔌 Database connection (PDO)</h2>
@@ -1552,8 +1578,8 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>🛠️ Create a table</h2>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">In the left column, click on "app"</div><div class="sdesc">This is your database</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Tab "Structure" → "Create table"</div><div class="sdesc">Give it a name (e.g.: <code>users</code>) and choose the number of columns</div></div></li>
-    <li class="step"><div class="snum">3</div><div><div class="stitle">Define your columns, then click "Save"</div><div class="sdesc">Always add an <code>id</code> column as INT AUTO_INCREMENT primary key</div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">"Structure" tab → "Create table"</div><div class="sdesc">Give it a name (e.g.: <code>users</code>) and choose the number of columns</div></div></li>
+    <li class="step"><div class="snum">3</div><div><div class="stitle">Define your columns, then "Save"</div><div class="sdesc">Always add an <code>id</code> column as INT AUTO_INCREMENT as the primary key</div></div></li>
   </ul>
 
   <h2>📊 Example "users" table</h2>
@@ -1563,12 +1589,12 @@ echo <span class="cs">"Hello world!"</span>;
       <tr><td><code>id</code></td><td>INT</td><td>11</td><td style="color:#059669;font-size:9pt">PRIMARY KEY, AUTO_INCREMENT</td></tr>
       <tr><td><code>name</code></td><td>VARCHAR</td><td>100</td><td style="color:#64748b">—</td></tr>
       <tr><td><code>email</code></td><td>VARCHAR</td><td>150</td><td style="color:#64748b">—</td></tr>
-      <tr><td><code>created_at</code></td><td>DATETIME</td><td>—</td><td style="color:#64748b">DEFAULT CURRENT_TIMESTAMP</td></tr>
+      <tr><td><code>date_created</code></td><td>DATETIME</td><td>—</td><td style="color:#64748b">DEFAULT CURRENT_TIMESTAMP</td></tr>
     </tbody>
   </table>
 
-  <h2>🔍 Run an SQL query</h2>
-  <p>Tab <strong>"SQL"</strong> in phpMyAdmin:</p>
+  <h2>🔍 Execute an SQL query</h2>
+  <p><strong>"SQL"</strong> tab in phpMyAdmin:</p>
   <pre><code><span class="cc">-- Insert data</span>
 <span class="ck">INSERT INTO</span> users (name, email)
 <span class="ck">VALUES</span> (<span class="cs">'Alice Martin'</span>, <span class="cs">'alice@example.com'</span>);
@@ -1589,7 +1615,7 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>⏹️ Stop the environment</h2>
   <div class="g2">
     <div class="card c-blue"><div class="ctitle">Option A — The simplest</div><p style="font-size:9.5pt;color:#475569"><strong>Double-click</strong> on <code>stop.bat</code> in the project folder. A black window opens and everything stops cleanly.</p></div>
-    <div class="card c-cyan"><div class="ctitle">Option B — Via Portainer</div><ol style="font-size:9pt;color:#475569;line-height:1.9;padding-left:14px"><li>Open <code>localhost:9000</code></li><li>Tab <strong>"Containers"</strong></li><li>Check all containers</li><li>Click <strong>"Stop"</strong></li></ol></div>
+    <div class="card c-cyan"><div class="ctitle">Option B — Via Portainer</div><ol style="font-size:9pt;color:#475569;line-height:1.9;padding-left:14px"><li>Open <code>localhost:9000</code></li><li><strong>"Containers"</strong> tab</li><li>Check all containers</li><li>Click <strong>"Stop"</strong></li></ol></div>
   </div>
   <div class="alert a-ok">
     <div class="aico">💾</div>
@@ -1599,7 +1625,7 @@ echo <span class="cs">"Hello world!"</span>;
   <h2>↺ Restart a specific service</h2>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Portainer → http://localhost:9000 → "Containers"</div></div></li>
-    <li class="step"><div class="snum">2</div><div><div class="stitle">Find the container to restart</div><div class="sdesc"><code>cours_web</code> = Apache+PHP &nbsp;|&nbsp; <code>cours_db</code> = database &nbsp;|&nbsp; <code>cours_phpmyadmin</code></div></div></li>
+    <li class="step"><div class="snum">2</div><div><div class="stitle">Find the container to restart</div><div class="sdesc"><code>cours_web</code> = Apache+PHP &nbsp;|&nbsp; <code>cours_db</code> = DB &nbsp;|&nbsp; <code>cours_phpmyadmin</code></div></div></li>
     <li class="step"><div class="snum">3</div><div><div class="stitle">Click the ↺ (Restart) button</div><div class="sdesc">The service restarts in a few seconds</div></div></li>
   </ul>
 
@@ -1624,7 +1650,7 @@ echo <span class="cs">"Hello world!"</span>;
     <div class="ctitle" style="color:#dc2626">❌ Portainer — "timeout" page (/timeout.html)</div>
     <p style="font-size:9.5pt;color:#475569;margin:0 0 5px"><strong>Solution A</strong>: Double-click on <code>reset-portainer.bat</code> in the project folder.<br><strong>Solution B</strong>: In CMD from the project folder:</p>
     <pre style="margin:4px 0"><code style="font-size:8.5pt">docker compose restart portainer</code></pre>
-    <p style="font-size:9pt;color:#475569;margin:4px 0 0">Then go <strong>immediately</strong> to http://localhost:9000.<br><strong>Solution C — Full reset</strong>: Docker Desktop → Volumes → delete <code>cours_portainer_data</code> → restart Portainer.</p>
+    <p style="font-size:9pt;color:#475569;margin:4px 0 0">Then go <strong>immediately</strong> to http://localhost:9000.<br><strong>Solution C — Full reset</strong>: Docker Desktop → Volumes → delete <code>cours_portainer_data</code> → relaunch Portainer.</p>
   </div>
 
   <div class="card c-red" style="margin-bottom:9px">
@@ -1643,13 +1669,13 @@ echo <span class="cs">"Hello world!"</span>;
   </div>
 
   <div class="card c-red" style="margin-bottom:9px">
-    <div class="ctitle" style="color:#dc2626">❌ PHP files do not display / do not update</div>
-    <p style="font-size:9.5pt;color:#475569;margin:0">Make sure your files are in <code>htdocs\</code> of the project. Refresh with <strong>Ctrl+F5</strong> (clears the cache).</p>
+    <div class="ctitle" style="color:#dc2626">❌ PHP files are not displayed / not updating</div>
+    <p style="font-size:9.5pt;color:#475569;margin:0">Verify that your files are in <code>htdocs\</code> of the project. Refresh with <strong>Ctrl+F5</strong> (clears cache).</p>
   </div>
 
   <div class="card c-red" style="margin-bottom:16px">
     <div class="ctitle" style="color:#dc2626">❌ phpMyAdmin — connection error</div>
-    <p style="font-size:9.5pt;color:#475569;margin:0">The database takes 10 to 20 seconds to start → wait and refresh (F5 or Ctrl+R).</p>
+    <p style="font-size:9.5pt;color:#475569;margin:0">The DB takes 10 to 20 seconds to start → wait and refresh (F5 or Ctrl+R).</p>
   </div>
 
   <div class="divider"></div>
@@ -1683,16 +1709,36 @@ echo <span class="cs">"Hello world!"</span>;
 function selectOS(os) {
   document.getElementById('page-selector').style.display = 'none';
   document.getElementById('tuto-' + os).classList.remove('hidden');
-  window.scrollTo(0, 0);
 }
-function goBack() {
-  ['mac', 'win'].forEach(function(id) {
-    document.getElementById('tuto-' + id).classList.add('hidden');
-  });
-  document.getElementById('page-selector').style.display = 'flex';
-  window.scrollTo(0, 0);
-}
-</script>
 
+function goBack() {
+  document.querySelectorAll('.tuto').forEach(function(el) {
+    el.classList.add('hidden');
+  });
+  document.getElementById('page-selector').style.display = '';
+}
+
+/* ── Copy buttons on all <pre> blocks ── */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre').forEach(function(pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.innerHTML = '📋 Copy';
+    btn.addEventListener('click', function() {
+      var code = pre.querySelector('code');
+      var text = (code || pre).textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.innerHTML = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.innerHTML = '📋 Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+    pre.appendChild(btn);
+  });
+});
+</script>
 </body>
 </html>
