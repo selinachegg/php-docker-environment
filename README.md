@@ -46,12 +46,18 @@ git clone https://github.com/selinachegg/php-docker-environment.git PHPenv
 
 ### 3. Launch
 
+**Launcher (recommended)** — An interactive menu to manage everything:
+
 | System | Command |
 |--------|---------|
-| **Windows** | Double-click `start.bat` |
-| **Mac** | Double-click `start.command` |
+| **Windows** | Double-click `launcher.bat` |
+| **macOS** | Double-click `launcher.command` |
 
-> **Mac — first time only**: open Terminal and type `chmod +x start.command stop.command`
+> **macOS — first time only**: open Terminal and type `chmod +x launcher.command start.command stop.command`
+
+The launcher lets you **start**, **stop**, **restart** the environment and **reset Portainer** from a single menu.
+
+Individual scripts (`start.bat`, `stop.bat`, `start.command`, `stop.command`) remain available for manual use.
 
 The first launch takes **5 to 10 minutes** (downloading images). After that: **~10 seconds**.
 
@@ -103,10 +109,12 @@ $pdo = new PDO(
 
 ## Stop the environment
 
+Use the **launcher** or the individual scripts:
+
 | System | Command |
 |--------|---------|
 | **Windows** | Double-click `stop.bat` |
-| **Mac** | Double-click `stop.command` |
+| **macOS** | Double-click `stop.command` |
 
 > Your PHP files and database data are preserved.
 
@@ -126,11 +134,11 @@ PDF versions are also available in the **`tutorials/`** folder:
 
 | Problem | Solution |
 |---------|----------|
-| Portainer shows "timeout" | **Windows**: double-click `reset-portainer.bat`. **Mac**: `docker compose restart portainer`. Then go to localhost:9000 immediately. |
+| Portainer shows "timeout" | Use **Reset Portainer** in the launcher, or: **Windows** `reset-portainer.bat` / **macOS** `docker compose restart portainer`. Then go to localhost:9000 immediately. |
 | Docker is not running | Open Docker Desktop, wait for the green whale icon, then run the script again. |
 | localhost:8080 not responding | Wait 30 seconds (database starts last) then refresh (F5). |
 | phpMyAdmin connection error | MariaDB takes 10-20s to start. Wait and refresh. |
-| [Mac] "Permission denied" | `chmod +x start.command stop.command` |
+| [macOS] "Permission denied" | `chmod +x launcher.command start.command stop.command` |
 | [Win] start.bat closes instantly | Right-click → "Run as administrator" |
 | Full reset | `docker compose down -v` then run the script again |
 
