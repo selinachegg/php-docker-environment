@@ -710,14 +710,14 @@ pre code {
     <button class="os-btn mac-btn" onclick="selectOS('mac')">
       <div class="os-icon">🍎</div>
       <div class="os-name">MacBook</div>
-      <div class="os-desc">Mac Intel or Apple Silicon<br>(M1 / M2 / M3 / M4)</div>
+      <div class="os-desc">macOS 14+ (Sonoma, Sequoia, Tahoe)<br>Mac Intel or Apple Silicon (M1 / M2 / M3 / M4 / M5)</div>
       <div class="os-cta">Mac Tutorial →</div>
     </button>
 
     <button class="os-btn win-btn" onclick="selectOS('win')">
       <div class="os-icon">🪟</div>
       <div class="os-name">Windows</div>
-      <div class="os-desc">Windows 10 or Windows 11<br>with WSL2 + Docker Desktop</div>
+      <div class="os-desc">Windows 10 or 11<br>Intel/AMD (x64) or Qualcomm (Arm64)</div>
       <div class="os-cta">Windows Tutorial →</div>
     </button>
 
@@ -747,7 +747,7 @@ pre code {
   <div class="cover-badge">Mac Tutorial — Beginner's Guide</div>
   <div class="cover-logo">🍎</div>
   <h1>PHP Environment<br><span>on MacBook</span></h1>
-  <p class="cover-subtitle">Step-by-step installation and usage guide<br>Compatible with Mac Intel &amp; Apple Silicon (M1/M2/M3/M4)</p>
+  <p class="cover-subtitle">Step-by-step installation and usage guide<br>macOS 14+ — Mac Intel &amp; Apple Silicon (M1/M2/M3/M4/M5)</p>
   <div class="cover-chips">
     <span class="cover-chip">🌐 Apache 2.4</span>
     <span class="cover-chip">⚙️ PHP 7.4</span>
@@ -774,7 +774,7 @@ pre code {
     <li>
       <div class="toc-row"><div class="toc-num">1</div><div class="toc-text">Install Docker Desktop on Mac</div><div class="toc-pg">p. 3</div></div>
       <ul class="toc-sub">
-        <li><div class="toc-text">Mac Intel or Apple Silicon — how to tell</div></li>
+        <li><div class="toc-text">Mac Intel or Apple Silicon — how to tell?</div></li>
         <li><div class="toc-text">Download and installation</div></li>
         <li><div class="toc-text">Verify that Docker is ready</div></li>
       </ul>
@@ -842,7 +842,7 @@ pre code {
       <div class="atitle">How to tell?</div>
       <div class="atext">Menu <strong>Apple ()</strong> → <strong>"About This Mac"</strong><br>
       • You see <strong>"Intel Processor"</strong> → Mac Intel<br>
-      • You see <strong>"Apple M1/M2/M3/M4 Chip"</strong> → Mac Apple Silicon</div>
+      • You see <strong>"Apple M1/M2/M3/M4/M5 Chip"</strong> → Mac Apple Silicon</div>
     </div>
   </div>
 
@@ -860,7 +860,7 @@ pre code {
       </ol>
     </div>
     <div class="card c-cyan">
-      <div class="ctitle">⚡ Mac Apple Silicon (M1/M2/M3/M4)</div>
+      <div class="ctitle">⚡ Mac Apple Silicon (M1/M2/M3/M4/M5)</div>
       <ol style="padding-left:16px;font-size:9.5pt;color:#475569;line-height:1.9">
         <li>Go to <strong>docker.com</strong></li>
         <li>Click <strong>"Download for Mac"</strong></li>
@@ -1221,7 +1221,7 @@ echo <span class="cs">"Hello world!"</span>;
     </table>
   </div>
   <div style="text-align:center;padding:16px;background:var(--light);border-radius:10px;border:1px solid var(--border);margin-top:16px">
-    <p style="font-size:9.5pt;color:var(--muted);margin:0">Mac Tutorial — Apache 2.4 + PHP 7.4 + MariaDB 10.6 + phpMyAdmin 5.2 + Portainer CE<br>Compatible with Mac Intel &amp; Apple Silicon (M1/M2/M3/M4)</p>
+    <p style="font-size:9.5pt;color:var(--muted);margin:0">Mac Tutorial — Apache 2.4 + PHP 7.4 + MariaDB 10.6 + phpMyAdmin 5.2 + Portainer CE<br>macOS 14+ — Mac Intel &amp; Apple Silicon (M1/M2/M3/M4/M5)</p>
   </div>
 </div>
 </div>
@@ -1247,7 +1247,7 @@ echo <span class="cs">"Hello world!"</span>;
   <div class="cover-badge">Windows Tutorial — Beginner's Guide</div>
   <div class="cover-logo">🪟</div>
   <h1>PHP Environment<br><span>on Windows</span></h1>
-  <p class="cover-subtitle">WSL2 + Docker Desktop installation guide<br>and step-by-step usage — Windows 10 / 11</p>
+  <p class="cover-subtitle">WSL2 + Docker Desktop installation guide<br>and step-by-step usage — Windows 10 or 11 — Intel/AMD (x64) or Qualcomm (Arm64)</p>
   <div class="cover-chips">
     <span class="cover-chip">🌐 Apache 2.4</span>
     <span class="cover-chip">⚙️ PHP 7.4</span>
@@ -1320,7 +1320,7 @@ echo <span class="cs">"Hello world!"</span>;
     <div class="aico">ℹ️</div>
     <div class="abody">
       <div class="atitle">About this tutorial</div>
-      <div class="atext">This guide is designed for Windows 10/11 with Docker Desktop + WSL2. All operations are performed through graphical interfaces after the initial setup.</div>
+      <div class="atext">This guide is designed for Windows 10 or 11 — Intel/AMD (x64) or Qualcomm (Arm64) — with Docker Desktop + WSL2. All operations are performed through graphical interfaces after the initial setup.</div>
     </div>
   </div>
 </div>
@@ -1335,7 +1335,7 @@ echo <span class="cs">"Hello world!"</span>;
   </div>
 
   <h2>① Enable WSL2 (Windows Subsystem for Linux)</h2>
-  <p>WSL2 allows Docker to run efficiently on Windows. It is free and built into Windows 10/11.</p>
+  <p>WSL2 allows Docker to run efficiently on Windows. It is free and built into Windows 10 and 11.</p>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Open PowerShell as administrator</div><div class="sdesc"><strong>Start</strong> menu → search for "PowerShell" → <strong>right-click → "Run as administrator"</strong></div></div></li>
     <li class="step"><div class="snum">2</div><div><div class="stitle">Type the installation command</div><div class="sdesc">Copy-paste exactly:</div></div></li>
@@ -1694,7 +1694,7 @@ echo <span class="cs">"Hello world!"</span>;
     </table>
   </div>
   <div style="text-align:center;padding:16px;background:var(--light);border-radius:10px;border:1px solid var(--border);margin-top:16px">
-    <p style="font-size:9.5pt;color:var(--muted);margin:0">Windows Tutorial — Apache 2.4 + PHP 7.4 + MariaDB 10.6 + phpMyAdmin 5.2 + Portainer CE<br>Windows 10 / 11 — Docker Desktop + WSL2</p>
+    <p style="font-size:9.5pt;color:var(--muted);margin:0">Windows Tutorial — Apache 2.4 + PHP 7.4 + MariaDB 10.6 + phpMyAdmin 5.2 + Portainer CE<br>Windows 10 or 11 — Intel/AMD (x64) or Qualcomm (Arm64) — Docker Desktop + WSL2</p>
   </div>
 </div>
 </div>

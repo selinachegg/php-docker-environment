@@ -13,8 +13,8 @@
   <img src="https://img.shields.io/badge/PHP-7.4-777BB4?logo=php&logoColor=white" alt="PHP 7.4">
   <img src="https://img.shields.io/badge/MariaDB-10.6-003545?logo=mariadb&logoColor=white" alt="MariaDB">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/Mac-Intel%20%7C%20Apple%20Silicon-000?logo=apple&logoColor=white" alt="Mac">
-  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/macOS-14%2B%20(Sonoma%2C%20Sequoia%2C%20Tahoe)-000?logo=apple&logoColor=white" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011%20—%20x64%20%7C%20Arm64-0078D4?logo=windows&logoColor=white" alt="Windows">
 </p>
 
 ---
