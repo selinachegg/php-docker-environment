@@ -900,31 +900,6 @@ pre code {
     <div><div class="ch-label">Chapter 2</div><div class="ch-title">First launch</div><div class="ch-sub">Launch the environment with a double-click</div></div>
   </div>
 
-  <h2>🔑 One-time step — Grant permissions</h2>
-  <p>The scripts <code>launcher.command</code>, <code>start.command</code> and <code>stop.command</code> need execution permission. <strong>This step only needs to be done once.</strong></p>
-  <ul class="steps">
-    <li class="step">
-      <div class="snum">1</div>
-      <div><div class="stitle">Open Terminal</div><div class="sdesc">Launchpad → search for "Terminal" → click on it</div></div>
-    </li>
-    <li class="step">
-      <div class="snum">2</div>
-      <div><div class="stitle">Navigate to the project folder</div><div class="sdesc">Type and press <strong>Enter</strong>:</div></div>
-    </li>
-  </ul>
-  <pre><code>cd ~/Desktop/PHPenv</code></pre>
-  <ul class="steps">
-    <li class="step">
-      <div class="snum">3</div>
-      <div><div class="stitle">Grant permissions</div><div class="sdesc">Type and press <strong>Enter</strong>:</div></div>
-    </li>
-  </ul>
-  <pre><code>chmod +x launcher.command start.command stop.command</code></pre>
-  <div class="alert a-ok">
-    <div class="aico">✅</div>
-    <div class="abody"><div class="atitle">Done!</div><div class="atext">You will never need the Terminal again. From now on, everything is done by double-clicking.</div></div>
-  </div>
-
   <h2>🚀 Launch the environment</h2>
   <ul class="steps">
     <li class="step"><div class="snum">1</div><div><div class="stitle">Verify that Docker Desktop is open and green</div><div class="sdesc">Check the whale icon at the top right of the screen</div></div></li>
@@ -1200,7 +1175,7 @@ echo <span class="cs">"Hello world!"</span>;
   <div class="card c-red" style="margin-bottom:9px">
     <div class="ctitle" style="color:#dc2626">❌ "Permission denied" on .command files</div>
     <p style="font-size:9pt;color:#475569;margin:4px 0">Open Terminal and type:</p>
-    <pre style="margin:4px 0"><code style="font-size:8.5pt">chmod +x ~/Desktop/PHPenv/launcher.command start.command stop.command</code></pre>
+    <pre style="margin:4px 0"><code style="font-size:8.5pt">chmod +x launcher.command start.command stop.command</code></pre>
   </div>
 
   <div class="card c-red" style="margin-bottom:16px">

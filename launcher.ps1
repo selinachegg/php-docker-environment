@@ -255,7 +255,7 @@ $btnStart.Add_Click({
 })
 
 $btnStop.Add_Click({
-    $r = Run-Docker "docker compose down" "Stopping..."
+    $r = Run-Docker "docker compose stop" "Stopping..."
     if ($r -eq 0) {
         $statusText.Text = "Environment stopped. Your data is preserved."
         $statusText.Foreground = $greenBrush

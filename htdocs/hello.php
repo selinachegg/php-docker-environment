@@ -14,12 +14,13 @@ try {
     $pdo = new PDO(
         "mysql:host=db;dbname=app;charset=utf8mb4",
         "app",
-        "app"
+        "app",
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
     echo "✅ Successfully connected to the database!";
 
 } catch (Exception $e) {
-    echo "❌ Connection error: " . $e->getMessage();
+    echo "❌ Connection error: " . htmlspecialchars($e->getMessage());
 }
 ?>
