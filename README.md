@@ -107,19 +107,6 @@ $pdo = new PDO(
 
 ---
 
-## Stop the environment
-
-Use the **launcher** or the individual scripts:
-
-| System | Command |
-|--------|---------|
-| **Windows** | Double-click `stop.bat` |
-| **macOS** | Double-click `stop.command` |
-
-> Your PHP files and database data are preserved.
-
----
-
 ## Full tutorial
 
 Open the [**Interactive tutorial (HTML)**](tutorials/STUDENT-TUTORIAL.html) in your browser for the complete step-by-step guide (Mac and Windows).
