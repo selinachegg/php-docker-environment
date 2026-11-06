@@ -5,8 +5,8 @@
 <h1 align="center">PHP Docker Environment</h1>
 
 <p align="center">
-  <strong>XAMPP equivalent — ready to use, zero configuration.</strong><br>
-  Apache 2.4 · PHP 7.4 · MariaDB 10.6 · phpMyAdmin · Portainer
+  <strong>XAMPP equivalent, ready to use, zero configuration.</strong><br>
+  Apache 2.4, PHP 7.4, MariaDB 10.6, phpMyAdmin, Portainer
 </p>
 
 <p align="center">
@@ -14,12 +14,12 @@
   <img src="https://img.shields.io/badge/MariaDB-10.6-003545?logo=mariadb&logoColor=white" alt="MariaDB">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/macOS-14%2B%20(Sonoma%2C%20Sequoia%2C%20Tahoe)-000?logo=apple&logoColor=white" alt="macOS 14+">
-  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011%20—%20x64%20%7C%20Arm64-0078D4?logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011%2C%20x64%20%7C%20Arm64-0078D4?logo=windows&logoColor=white" alt="Windows">
 </p>
 
 ---
 
-## Setup — 3 steps
+## Setup: 3 steps
 
 ### 1. Install Docker Desktop (once)
 
@@ -29,7 +29,7 @@ Download and install [Docker Desktop](https://www.docker.com/products/docker-des
 
 ### 2. Download this project
 
-**Option A — Without Git (beginners)**
+**Option A: without Git (beginners)**
 
 1. On this page, click the green **`<> Code`** button (top right)
 2. Click **`Download ZIP`**
@@ -37,7 +37,7 @@ Download and install [Docker Desktop](https://www.docker.com/products/docker-des
 4. **Extract** (unzip) the folder to your **Desktop**
 5. Name the folder **`PHPenv`**
 
-**Option B — With Git**
+**Option B: with Git**
 
 ```bash
 cd ~/Desktop
@@ -46,7 +46,7 @@ git clone https://github.com/selinachegg/php-docker-environment.git PHPenv
 
 ### 3. Launch
 
-**Launcher (recommended)** — An interactive menu to manage everything:
+**Launcher (recommended)**: An interactive menu to manage everything:
 
 | System | Command |
 |--------|---------|
@@ -65,16 +65,16 @@ The first launch takes **5 to 10 minutes** (downloading images). After that: **~
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| 🌐 **PHP Site** | [localhost:8080](http://localhost:8080) | Your PHP files (`htdocs/` folder) |
-| 🗄️ **phpMyAdmin** | [localhost:8081](http://localhost:8081) | Visual database management |
-| 🐳 **Portainer** | [localhost:9000](http://localhost:9000) | Visual Docker container management |
-| 🏠 **Dashboard** | [localhost:8082](http://localhost:8082) | Home page with all links |
+| **PHP Site** | [localhost:8080](http://localhost:8080) | Your PHP files (`htdocs/` folder) |
+| **phpMyAdmin** | [localhost:8081](http://localhost:8081) | Visual database management |
+| **Portainer** | [localhost:9000](http://localhost:9000) | Visual Docker container management |
+| **Dashboard** | [localhost:8082](http://localhost:8082) | Home page with all links |
 
 ---
 
 ## Working with PHP
 
-Your PHP files go in the **`htdocs/`** folder. Changes are **instant** — no restart needed.
+Your PHP files go in the **`htdocs/`** folder. Changes are **instant**, no restart needed.
 
 ```php
 <?php
@@ -131,8 +131,8 @@ PDF versions are also available in the **`tutorials/`** folder:
 
 ## Tech stack
 
-- **PHP** 7.4 — PDO, MySQLi, GD, ZIP, MBString, OPcache
-- **Apache** 2.4 — mod_rewrite enabled
-- **MariaDB** 10.6 — 100% MySQL compatible
+- **PHP** 7.4: PDO, MySQLi, GD, ZIP, MBString, OPcache
+- **Apache** 2.4: mod_rewrite enabled
+- **MariaDB** 10.6: 100% MySQL compatible
 - **phpMyAdmin** 5.2
 - **Portainer** Community Edition
